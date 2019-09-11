@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.user_infoMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.dao.user_info">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="username" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="password" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="usercode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dpartment_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="station_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, password, usercode, dpartment_code, station_code, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--  查找所有-->
+  <select id="selectAllUser"  resultMap="BaseResultMap">
+    select * from user_info
+  </select>
+  <!--  //根据姓名查找-->
+  <select id="selectByName" parameterType="String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_info
+    where username = #{username,jdbcType=INTEGER}
+  </select>
+  <!--  //根据员工编码查找-->
+  <select id="selectByUsercode" parameterType="user_info" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_info
+    where usercode = #{usercode,jdbcType=INTEGER}
+  </select>
+  <!--  //mybatis的xxxMapper.xml的Sql语句，CREATE_DATE是xxx表里面记录创建时间的字段-->
+  <select id="selectByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select *
+    from user_info
+    <where>
+      <if test="param.begintTime!=null and param.begintTime!=''">
+        <![CDATA[  and DATE_FORMAT(CREATE_DATE, '%Y-%m-%d %T:%i:%s') >= DATE_FORMAT(#{param.begintTime}, '%Y-%m-%d %T:%i:%s')   ]]>
+      </if>
+      <if test="param.endTime!=null and param.endTime!=''">
+        <![CDATA[  and DATE_FORMAT(CREATE_DATE, '%Y-%m-%d %T:%i:%s') <= DATE_FORMAT(#{param.endTime}, '%Y-%m-%d %T:%i:%s')   ]]>
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.dao.user_info">
+    insert into user_info (id, username, password, 
+      usercode, dpartment_code, station_code, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{usercode,jdbcType=VARCHAR}, #{dpartmentCode,jdbcType=VARCHAR}, #{stationCode,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demo.dao.user_info">
+    insert into user_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="usercode != null">
+        usercode,
+      </if>
+      <if test="dpartmentCode != null">
+        dpartment_code,
+      </if>
+      <if test="stationCode != null">
+        station_code,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="usercode != null">
+        #{usercode,jdbcType=VARCHAR},
+      </if>
+      <if test="dpartmentCode != null">
+        #{dpartmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stationCode != null">
+        #{stationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.dao.user_info">
+    update user_info
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="usercode != null">
+        usercode = #{usercode,jdbcType=VARCHAR},
+      </if>
+      <if test="dpartmentCode != null">
+        dpartment_code = #{dpartmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stationCode != null">
+        station_code = #{stationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.dao.user_info">
+    update user_info
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      usercode = #{usercode,jdbcType=VARCHAR},
+      dpartment_code = #{dpartmentCode,jdbcType=VARCHAR},
+      station_code = #{stationCode,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
